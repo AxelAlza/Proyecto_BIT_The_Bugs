@@ -8,6 +8,11 @@ def Inicio():
     return render_template("Inicio.html")
 
 
+@app.route('/Mantenimiento/Clientes')
+def MantClientes():
+    return render_template("MantClientes.html")
+
+
 @app.route('/Mantenimiento/Empleados')
 def MantEmpleados():
     return render_template("MantEmpleados.html")
