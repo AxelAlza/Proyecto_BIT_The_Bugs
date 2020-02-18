@@ -8,5 +8,10 @@ def Inicio():
     return render_template("Inicio.html")
 
 
+@app.route('/Mantenimiento/Empleados')
+def MantEmpleados():
+    return render_template("MantEmpleados.html")
+
+
 if __name__ == "__main__":
     app.run()
