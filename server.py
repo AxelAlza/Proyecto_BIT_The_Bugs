@@ -16,7 +16,7 @@ def MantClientes():
     return render_template("MantClientes.html")
 
 
-@app.route('/Mantenimiento/Empleados')
+@app.route('/Mantenimiento/Empleados', methods=['GET'])
 def MantEmpleados():
     return render_template("MantEmpleados.html")
 
