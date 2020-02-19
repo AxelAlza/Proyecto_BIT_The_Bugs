@@ -1,4 +1,5 @@
-function Cambiar() {
-    var element = document.getElementById("1");
-    element.classList.add("table-dark");
- }
+$("#table tr").click(function(){
+   $(this).addClass('table-primary').siblings().removeClass('table-primary');
+   var value=$(this).find('td:last').html();
+});
+
