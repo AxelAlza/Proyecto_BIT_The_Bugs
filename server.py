@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import sqlite3
 
 from werkzeug.utils import redirect
@@ -39,6 +39,14 @@ def MantClientes():
 def MantEmpleados():
     html = htmlfy("Empleado")
     return render_template("/MantEmpleados.html", html=html)
+
+
+@app.route('/pass_val', methods=['POST'])
+def pass_val():
+    cedula = request.args.get('cedula')
+    database.execute('Delete from empleado where EmpCi = ?', (cedula,))
+    dbconnect.commit()
+    return jsonify({'reply': "success"})
 
 
 @app.route('/Mantenimiento/Empleados/AgregarEmpleado', methods=['GET', 'POST'])
