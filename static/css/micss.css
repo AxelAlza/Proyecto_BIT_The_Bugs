@@ -1,0 +1,5 @@
+#table tbody tr td {
+    overflow-y: hidden;
+    overflow-x: hidden;
+    height: 1px;
+}
