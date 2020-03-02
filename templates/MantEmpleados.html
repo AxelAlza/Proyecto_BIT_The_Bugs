@@ -13,6 +13,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="/">Sistema de gestión de empleados</a>
@@ -39,41 +40,29 @@
             </ul>
         </div>
     </nav>
-<div class = "form group col-md-12">
+    <div class="form group col-md-12">
         <h2>Mantenimiento de empleados</h2>
         <p>Agregar , Modificar o eliminar empleados</p>
-        <table
-               data-height ='560'
-               data-toggle="table"
-               data-url="/Mantenimiento/getpagesemp"
-               data-search="true"
-               data-pagination="true"
-               data-single-select="true"
-               data-click-to-select="true"
-               data-search-on-enter-key="true"
-               data-search-align="left"
-               data-pagination-h-align="left"
-               data-pagination-detail-h-align="right"
-               id="table">
-            <thead class = "thead-dark">
+        <table data-height='560' data-toggle="table" data-url="/Mantenimiento/getpagesemp" data-search="true" data-pagination="true" data-single-select="true" data-click-to-select="true" data-search-on-enter-key="true" data-search-align="left" data-pagination-h-align="left" data-pagination-detail-h-align="right" id="table">
+            <thead class="thead-dark">
                 <tr>
                     <th data-field="state" data-checkbox="true"></th>
-                    <th data-field="empci" >CI</th>
+                    <th data-field="empci">CI</th>
                     <th data-field="empnom">Nombre</th>
-                    <th data-field="empape" >Apellido</th>
+                    <th data-field="empape">Apellido</th>
                     <th data-field="empage">Edad</th>
-                    <th data-field="emptel" >Telefono</th>
-                    <th data-field="empdir" >Dirección</th>
-                    <th data-field="empmail" >Mail</th>
-                    <th data-field="emphde" >Horario Desde</th>
-                    <th data-field="emphha" >Hasta</th>
+                    <th data-field="emptel">Telefono</th>
+                    <th data-field="empdir">Dirección</th>
+                    <th data-field="empmail">Mail</th>
+                    <th data-field="emphde">Horario Desde</th>
+                    <th data-field="emphha">Hasta</th>
                 </tr>
         </table>
-<br>
-        <a class="btn btn-primary" href="/Mantenimiento/Empleados/AgregarEmpleado" role="button">Agregar</a>
-        <button type="button" class="btn btn-primary">Modificar</button>
+        <br>
+        <a class="btn btn-primary" id="agregar" href="/Mantenimiento/Empleados/AgregarModificarEmpleado?mode=INS" role="button">Agregar</a>
+        <a class="btn btn-primary" id="modificar" role="button">Modificar</a>
         <button type="button" id="eliminar" class="btn btn-primary">Eliminar</button>
-</div>
+    </div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="/static/js/bootstrap.bundle.min.js"></script>

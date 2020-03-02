@@ -46,40 +46,40 @@
             <div class="form-row">
                 <div class="form group col-md-4" id="Ced">
                     <label>Cédula de identidad</label>
-                    <input type="number" class="form-control" name="EmpCi" id="cedula" data-toggle="popover" data-trigger="manual" title="Cedula inapropiada" data-content="Esta Cedula ya existe" required>
+                    <input type="number" class="form-control" name="EmpCi" id="EmpCi" data-toggle="popover" data-trigger="manual" title="Cedula inapropiada" data-content="Esta Cedula ya existe" required>
                 </div>
             </div>
             <br>
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label>Nombre</label>
-                    <input type="text" class="form-control" name="EmpNom" required>
+                    <input type="text" class="form-control" name="EmpNom" id="EmpNom" required>
                 </div>
                 <div class="form-group col-md-4">
                     <label>Apellido</label>
-                    <input type="text" class="form-control" name="EmpApe" required>
+                    <input type="text" class="form-control" name="EmpApe" id ="EmpApe" required>
                 </div>
                 <div class="form-group col-md-2">
                     <label>Edad</label>
-                    <input type="number" class="form-control" name="EmpAge" required>
+                    <input type="number" class="form-control" name="EmpAge" id ="EmpAge" required>
                 </div>
             </div>
             <br>
             <div class="form-row">
                 <div class="form group col-md-4">
                     <label>Número de teléfono</label>
-                    <input type="number" class="form-control" name="EmpTel" required>
+                    <input type="number" class="form-control" name="EmpTel" id ="EmpTel"required>
                 </div>
                 <div class="form group col-md-6">
                     <label>Email</label>
-                    <input type="email" class="form-control" name="EmpMail" required>
+                    <input type="email" class="form-control" name="EmpMail" id ="EmpMail" required>
                 </div>
             </div>
             <br>
             <div class="form-row">
                 <div class="form group col-md-6">
                     <label>Dirección</label>
-                    <input type="text" class="form-control" name="EmpDir" placeholder="5334 Marcos Salcedo" required>
+                    <input type="text" class="form-control" name="EmpDir" id="EmpDir" placeholder="5334 Marcos Salcedo" required>
                 </div>
             </div>
 
@@ -90,13 +90,13 @@
                     <div class="input-group-prepend">
                         <div class="input-group-text">Desde</div>
                     </div>
-                    <input type="number" class="form-control" name="EmpHde">
+                    <input type="number" class="form-control" name="EmpHde" id = "EmpHde">
                 </div>
                 <div class="input-group mb-2 mr-sm-2">
                     <div class="input-group-prepend">
                         <div class="input-group-text">Hasta</div>
                       </div>
-                    <input type="number" class="form-control" name="EmpHha">
+                    <input type="number" class="form-control" name="EmpHha" id = "EmpHha">
                 </div>
             </div>
             <br>
@@ -107,6 +107,6 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="\static\js\bootstrap.bundle.min.js"></script>
-    <script type="text/javascript" src="/static/js/AgregarEmpleado.js"></script>
+    <script type="text/javascript" src="/static/js/AgregarModificarEmpleado.js"></script>
 </body>
 </html>

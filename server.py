@@ -4,10 +4,13 @@ from flask import Flask, render_template, request, jsonify
 
 dbconnect = sqlite3.connect('The_Bugs.db', check_same_thread=False)
 database = dbconnect.cursor()
+keyscli = ['"clici":', '"clinom":', '"cliape":', '"cliage":', '"clitel":', '"clidir":', '"clihid"']
+keysemp = ['"empci":', '"empnom":', '"empape":', '"empage":', '"emptel":', '"empdir":', '"empmail":', '"emphde":',
+           '"emphha":']
 
 
-def htmlfy(tabla, keys):
-    database.execute("Select * From " + tabla)
+def htmlfy(query, keys):
+    database.execute(query)
     lista = database.fetchall()
     itemj = ''
     i = 0
@@ -40,16 +43,13 @@ def Inicio():
 
 @app.route('/Mantenimiento/getpagesemp', methods=['GET'])
 def getpagesemp():
-    keys = ['"empci":', '"empnom":', '"empape":', '"empage":', '"emptel":', '"empdir":', '"empmail":', '"emphde":',
-            '"emphha":']
-    htmlpages = htmlfy("Empleado", keys)
+    htmlpages = htmlfy("Select * from Empleado", keysemp)
     return htmlpages
 
 
 @app.route('/Mantenimiento/getpagescli', methods=['GET'])
 def getpagescli():
-    keys = ['"clici":', '"clinom":', '"cliape":', '"cliage":', '"clitel":', '"clidir":', '"clihid']
-    htmlpages = htmlfy("Cliente", keys)
+    htmlpages = htmlfy("Select * From Cliente", keyscli)
     return htmlpages
 
 
@@ -88,15 +88,29 @@ def CedulaDisponibleEmp():
     else:
         database.execute('Select CliCi  from Cliente where CliCi = ?', (cedula,))
     ci = database.fetchone()
+
     if ci is None:
         return jsonify({'reply': "success"})
     else:
         return jsonify({'reply': "fail"})
 
 
-@app.route('/Mantenimiento/Empleados/AgregarEmpleado', methods=['GET', 'POST'])
-def AgregarEmpleado():
-    if request.method == "POST":
+@app.route('/getdataemp', methods=['GET', 'POST'])
+def GetDataEmp():
+    cedula = request.args.get('ced')
+    modo = request.args.get('modo')
+    if modo == "emp":
+        json = htmlfy("select * from Empleado where EmpCi =" + cedula, keysemp)
+    else:
+        json = htmlfy("select * from Cliente where CliCi =" + cedula, keyscli)
+    return json
+
+
+@app.route('/Mantenimiento/Empleados/AgregarModificarEmpleado', methods=['GET', 'POST'])
+def AgregarModificarEmpleado():
+    mode = request.args.get('mode')
+    cedula = ''
+    if request.method == "POST" and mode == 'INS':
         EmpCi = request.form['EmpCi']
         EmpNom = request.form['EmpNom']
         EmpApe = request.form['EmpApe']
@@ -110,6 +124,23 @@ def AgregarEmpleado():
             "INSERT INTO Empleado VALUES (? , ? , ? , ? , ?, ? ,? ,? , ?)", (EmpCi, EmpNom, EmpApe, EmpAge, EmpTel
                                                                              , EmpDir, EmpMail, EmpHde, EmpHha))
         dbconnect.commit()
+    elif request.method == "POST" and mode == 'UPD':
+        EmpCi = request.form['EmpCi']
+        EmpNom = request.form['EmpNom']
+        EmpApe = request.form['EmpApe']
+        EmpAge = request.form['EmpAge']
+        EmpTel = request.form['EmpTel']
+        EmpDir = request.form['EmpDir']
+        EmpMail = request.form['EmpMail']
+        EmpHde = request.form['EmpHde']
+        EmpHha = request.form['EmpHha']
+        database.execute(
+            "UPDATE Empleado SET EmpCi = ? , EmpNom = ?, EmpAge = ? , EmpTel = ? , EmpDir = ? , EmpMail = ? , "
+            "EmpDir = ? , EmpMail = ? , EmpHde = ? , EmpHha = ? where EmpCi = ?", (EmpCi, EmpNom, EmpApe, EmpAge, EmpTel
+                                                                                   , EmpDir, EmpMail, EmpHde, EmpHha,
+                                                                                   cedula))
+        dbconnect.commit()
+
     return render_template("/AgregarEmpleado.html")
 
 
