@@ -141,7 +141,7 @@ def AgregarModificarEmpleado():
                                                                                    cedula))
         dbconnect.commit()
 
-    return render_template("/AgregarEmpleado.html")
+    return render_template("/AgregarModificarEmpleado.html")
 
 
 if __name__ == "__main__":
