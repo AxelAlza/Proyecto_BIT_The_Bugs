@@ -40,41 +40,28 @@
             </ul>
         </div>
     </nav>
-    <div class = "form group col-md-12">
-            <h2>Mantenimiento de Clientes</h2>
-            <p>Agregar , Modificar o eliminar Clientes</p>
-            <table
-                   data-height ='560'
-                   data-toggle="table"
-                   data-url="/Mantenimiento/getpagescli"
-                   data-search="true"
-                   data-pagination="true"
-                   data-single-select="true"
-                   data-click-to-select="true"
-                   data-search-on-enter-key="true"
-                   data-search-align="left"
-                   data-pagination-h-align="left"
-                   data-pagination-detail-h-align="right"
-                   id="table">
-                <thead class = "thead-dark">
-                    <tr>
-                        <th data-field="state" data-checkbox="true"></th>
-                        <th data-field="clici" >CI</th>
-                        <th data-field="clinom">Nombre</th>
-                        <th data-field="cliape" >Apellido</th>
-                        <th data-field="cliage">Edad</th>
-                        <th data-field="clihid">Hospital</th>
-                    </tr>
-            </table>
-    <br>
-            <a class="btn btn-primary" href="#" role="button">Agregar</a>
-            <button type="button" class="btn btn-primary">Modificar</button>
-            <button type="button" id="eliminar" class="btn btn-primary">Eliminar</button>
+    <div class="form group col-md-12">
+        <h2>Mantenimiento de Clientes</h2>
+        <p>Agregar , Modificar o eliminar Clientes</p>
+        <table data-height='560' data-toggle="table" data-url="/Mantenimiento/getpagescli" data-search="true" data-pagination="true" data-single-select="true" data-click-to-select="true" data-search-on-enter-key="true" data-search-align="left" data-pagination-h-align="left" data-pagination-detail-h-align="right" id="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th data-field="state" data-checkbox="true"></th>
+                    <th data-field="clici">CI</th>
+                    <th data-field="clinom">Nombre</th>
+                    <th data-field="cliape">Apellido</th>
+                    <th data-field="cliage">Edad</th>
+                    <th data-field="clihid">Hospital</th>
+                </tr>
+        </table>
+        <br>
+        <button class="btn btn-primary" id="agregar" role="button">Agregar</button>
+        <button class="btn btn-primary" id="modificar" role="button">Modificar</button>
+        <button type="button" id="eliminar" class="btn btn-primary">Eliminar</button>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="/static/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript" src="/static/js/MantClientes.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
 </body>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="/static/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="/static/js/MantClientes.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
 </html>

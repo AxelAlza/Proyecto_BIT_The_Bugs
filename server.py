@@ -1,10 +1,11 @@
 import sqlite3
 
 from flask import Flask, render_template, request, jsonify
+from werkzeug.utils import redirect
 
 dbconnect = sqlite3.connect('The_Bugs.db', check_same_thread=False)
 database = dbconnect.cursor()
-keyscli = ['"clici":', '"clinom":', '"cliape":', '"cliage":', '"clitel":', '"clidir":', '"clihid"']
+keyscli = ['"clici":', '"clinom":', '"cliape":', '"cliage":', '"clihid":']
 keysemp = ['"empci":', '"empnom":', '"empape":', '"empage":', '"emptel":', '"empdir":', '"empmail":', '"emphde":',
            '"emphha":']
 
@@ -30,6 +31,7 @@ def htmlfy(query, keys):
             agr2 = ''
         itemj = itemj + json + '}' + agr2
     itemj = "[" + itemj + "]"
+    print(itemj)
     return itemj
 
 
@@ -79,7 +81,7 @@ def EliminarCliente():
     return jsonify({'reply': "success"})
 
 
-@app.route('/CedulaDisponibleEmp', methods=['GET', 'POST'])
+@app.route('/CedulaDisponible', methods=['GET', 'POST'])
 def CedulaDisponibleEmp():
     cedula = request.args.get('cedula')
     modo = request.args.get('modo')
@@ -95,7 +97,7 @@ def CedulaDisponibleEmp():
         return jsonify({'reply': "fail"})
 
 
-@app.route('/getdataemp', methods=['GET', 'POST'])
+@app.route('/getdata', methods=['GET', 'POST'])
 def GetDataEmp():
     cedula = request.args.get('ced')
     modo = request.args.get('modo')
@@ -109,8 +111,8 @@ def GetDataEmp():
 @app.route('/Mantenimiento/Empleados/AgregarModificarEmpleado', methods=['GET', 'POST'])
 def AgregarModificarEmpleado():
     mode = request.args.get('mode')
-    cedula = ''
-    if request.method == "POST" and mode == 'INS':
+    cedula = request.args.get('cedula')
+    if request.method == "POST":
         EmpCi = request.form['EmpCi']
         EmpNom = request.form['EmpNom']
         EmpApe = request.form['EmpApe']
@@ -120,28 +122,43 @@ def AgregarModificarEmpleado():
         EmpMail = request.form['EmpMail']
         EmpHde = request.form['EmpHde']
         EmpHha = request.form['EmpHha']
-        database.execute(
-            "INSERT INTO Empleado VALUES (? , ? , ? , ? , ?, ? ,? ,? , ?)", (EmpCi, EmpNom, EmpApe, EmpAge, EmpTel
-                                                                             , EmpDir, EmpMail, EmpHde, EmpHha))
-        dbconnect.commit()
-    elif request.method == "POST" and mode == 'UPD':
-        EmpCi = request.form['EmpCi']
-        EmpNom = request.form['EmpNom']
-        EmpApe = request.form['EmpApe']
-        EmpAge = request.form['EmpAge']
-        EmpTel = request.form['EmpTel']
-        EmpDir = request.form['EmpDir']
-        EmpMail = request.form['EmpMail']
-        EmpHde = request.form['EmpHde']
-        EmpHha = request.form['EmpHha']
-        database.execute(
-            "UPDATE Empleado SET EmpCi = ? , EmpNom = ?, EmpAge = ? , EmpTel = ? , EmpDir = ? , EmpMail = ? , "
-            "EmpDir = ? , EmpMail = ? , EmpHde = ? , EmpHha = ? where EmpCi = ?", (EmpCi, EmpNom, EmpApe, EmpAge, EmpTel
-                                                                                   , EmpDir, EmpMail, EmpHde, EmpHha,
-                                                                                   cedula))
-        dbconnect.commit()
-
+        if mode == "INS":
+            database.execute(
+                "INSERT INTO Empleado VALUES (? , ? , ? , ? , ?, ? ,? ,? , ?)", (EmpCi, EmpNom, EmpApe, EmpAge, EmpTel
+                                                                                 , EmpDir, EmpMail, EmpHde, EmpHha))
+            dbconnect.commit()
+            return redirect("/Mantenimiento/Empleados")
+        else:
+            database.execute(
+                "UPDATE Empleado SET EmpNom = ?, EmpApe = ? ,EmpAge =?, EmpTel = ? , EmpDir = ? ,EmpMail = ?,"
+                "EmpHde = ? , EmpHha = ? where EmpCi = ?",
+                (EmpNom, EmpApe, EmpAge, EmpTel, EmpDir, EmpMail, EmpHde, EmpHha, cedula))
+            dbconnect.commit()
+            return redirect("/Mantenimiento/Empleados")
     return render_template("/AgregarModificarEmpleado.html")
+
+
+@app.route('/Mantenimiento/Empleados/AgregarModificarCliente', methods=['GET', 'POST'])
+def AgregarModificarCliente():
+    mode = request.args.get('mode')
+    cedula = request.args.get('cedula')
+    if request.method == "POST":
+        CliCi = request.form['CliCi']
+        CliNom = request.form['CliNom']
+        CliApe = request.form['CliApe']
+        CliAge = request.form['CliAge']
+        CliHid = request.form['CliHid']
+        if mode == "INS":
+            database.execute("INSERT INTO Cliente VALUES (? , ? , ? , ? , ?)", (CliCi, CliNom, CliApe, CliAge, CliHid))
+            dbconnect.commit()
+            return redirect("/Mantenimiento/Clientes")
+        else:
+            database.execute(
+                "UPDATE Cliente SET CliNom = ?, CliApe = ? ,CliAge =?, CliHid = ? where CliCi = ?",
+                (CliCi, CliNom, CliApe, CliAge, CliHid, cedula))
+            dbconnect.commit()
+            return redirect("/Mantenimiento/Clientes")
+    return render_template("/AgregarModificarCliente.html")
 
 
 if __name__ == "__main__":

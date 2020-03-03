@@ -8,6 +8,11 @@
                  cedula = json[0].empci;
         })
     })
+
+    $("#agregar").click(function() {
+      window.location.replace("/Mantenimiento/Empleados/AgregarModificarEmpleado?mode=INS");
+    } )
+
     $("#modificar").click(function(event) {
         if (cedula == undefined) {
             event.preventDefault();

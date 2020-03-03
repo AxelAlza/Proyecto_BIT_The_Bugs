@@ -8,9 +8,11 @@ function GetURLParameter(sParam) {
     }
   }
 }
-
 function ValidateForm() {
-
+  if ($('#EmpCi').val().toString().length == 8) {
+    alert("La cedula debe ser de 8 digitos")
+    return true
+  }
   if ($('#EmpAge').val() < 18) {
     alert("La edad no puede ser menor a 18")
     return true
@@ -29,9 +31,8 @@ function ValidateForm() {
   }
   return false
 }
-
 function getdata(ced) {
-  $.get("/getdataemp?ced=" + ced + "&modo=emp", function(data) {
+  $.get("/getdata?ced=" + ced + "&modo=emp", function(data) {
     data = JSON.parse(data);
     $('#EmpCi').val(ced);
     $('#EmpNom').val(data[0].empnom);
@@ -50,21 +51,21 @@ var mode = GetURLParameter("mode")
 if (mode == "UPD") {
   var ced = GetURLParameter("cedula")
   getdata(ced)
+  $("#titulo").text("Modificar Empleado");
 }
 
 $(document).ready(function() {
-  var cedula;
-  var largobien = 'N';
+
+  var cedula
   var cedulabien = 'N';
   $("#EmpCi").keyup(function() {
-    cedula = $(this).val();
-    if ($(this).val().toString().length == 8) {
-      largobien = 'S';
+    if (parseInt(ced) != $('#EmpCi').val()) {
+      cedula = $(this).val();
       $.ajax({
         type: 'POST',
         contentType: 'application/json;charset-utf-08',
         dataType: 'json',
-        url: '/CedulaDisponibleEmp?cedula=' + cedula + '&modo=emp',
+        url: '/CedulaDisponible?cedula=' + cedula + '&modo=emp',
         success: function(data) {
           var reply = data.reply;
           if (reply == "success") {
@@ -76,16 +77,13 @@ $(document).ready(function() {
           }
         }
       })
-    } else {
-      largobien = 'N'
     }
   })
+
   $("#send").submit(function(event) {
     if (mode == "INS") {
-      if (largobien != 'S' || cedulabien != 'S' || ValidateForm()) {
+      if  (cedulabien != 'S' || ValidateForm()) {
         event.preventDefault();
-      } else {
-        window.location.replace('/Mantenimiento/Empleados');
       }
     }
   })
