@@ -31,7 +31,6 @@ def htmlfy(query, keys):
             agr2 = ''
         itemj = itemj + json + '}' + agr2
     itemj = "[" + itemj + "]"
-    print(itemj)
     return itemj
 
 
@@ -68,17 +67,23 @@ def MantEmpleados():
 @app.route('/EliminarEmpleado', methods=['POST'])
 def EliminarEmpleado():
     cedula = request.args.get('cedula')
-    database.execute('Delete from empleado where EmpCi = ?', (cedula,))
-    dbconnect.commit()
-    return jsonify({'reply': "success"})
+    try:
+        database.execute('Delete from empleado where EmpCi = ?', (cedula,))
+        dbconnect.commit()
+        return jsonify({'reply': "success"})
+    except sqlite3.Error:
+        return jsonify({'reply': "fail"})
 
 
 @app.route('/EliminarCliente', methods=['POST'])
 def EliminarCliente():
     cedula = request.args.get('cedula')
-    database.execute('Delete from Cliente where EmpCi = ?', (cedula,))
-    dbconnect.commit()
-    return jsonify({'reply': "success"})
+    try:
+        database.execute('Delete from Cliente where CliCi = ?', (cedula,))
+        dbconnect.commit()
+        return jsonify({'reply': "success"})
+    except sqlite3.Error:
+        return jsonify({'reply': "fail"})
 
 
 @app.route('/CedulaDisponible', methods=['GET', 'POST'])
@@ -130,9 +135,9 @@ def AgregarModificarEmpleado():
             return redirect("/Mantenimiento/Empleados")
         else:
             database.execute(
-                "UPDATE Empleado SET EmpNom = ?, EmpApe = ? ,EmpAge =?, EmpTel = ? , EmpDir = ? ,EmpMail = ?,"
+                "UPDATE Empleado SET Empci = ?,EmpNom = ?, EmpApe = ? ,EmpAge =?, EmpTel = ? , EmpDir = ? ,EmpMail = ?,"
                 "EmpHde = ? , EmpHha = ? where EmpCi = ?",
-                (EmpNom, EmpApe, EmpAge, EmpTel, EmpDir, EmpMail, EmpHde, EmpHha, cedula))
+                (cedula, EmpNom, EmpApe, EmpAge, EmpTel, EmpDir, EmpMail, EmpHde, EmpHha, cedula))
             dbconnect.commit()
             return redirect("/Mantenimiento/Empleados")
     return render_template("/AgregarModificarEmpleado.html")
@@ -154,7 +159,7 @@ def AgregarModificarCliente():
             return redirect("/Mantenimiento/Clientes")
         else:
             database.execute(
-                "UPDATE Cliente SET CliNom = ?, CliApe = ? ,CliAge =?, CliHid = ? where CliCi = ?",
+                "UPDATE Cliente SET CliCi = ? ,CliNom = ?, CliApe = ? ,CliAge =?, CliHid = ? where CliCi = ?",
                 (CliCi, CliNom, CliApe, CliAge, CliHid, cedula))
             dbconnect.commit()
             return redirect("/Mantenimiento/Clientes")
