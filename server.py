@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import date
 
 from flask import Flask, render_template, request, jsonify
 from werkzeug.utils import redirect
@@ -8,6 +9,21 @@ database = dbconnect.cursor()
 keyscli = ['"clici":', '"clinom":', '"cliape":', '"cliage":', '"clihid":']
 keysemp = ['"empci":', '"empnom":', '"empape":', '"empage":', '"emptel":', '"empdir":', '"empmail":', '"emphde":',
            '"emphha":']
+keyshos = ['"hosid":', '"hosdir":', '"hosnom":']
+keystur = ['"turfch":', '"clici":', '"clihid":', '"empci":', '"TurHde":', '"TurHha":']
+
+
+def crearturnos():
+    database.execute("select CliCi from Cliente")
+    lista = database.fetchall()
+    fechadehoy = date.today()
+    valores = []
+    i = 0
+    for tupla in lista:
+        for columna in tupla:
+            valores.append((columna, fechadehoy))
+    database.executemany("INSERT or REPLACE INTO Turno (CliCi,TurFch) Values(?,?)", valores)
+    dbconnect.commit()
 
 
 def htmlfy(query, keys):
@@ -29,7 +45,7 @@ def htmlfy(query, keys):
             i = i + 1
         if num == len(lista) - 1:
             agr2 = ''
-        itemj = itemj + json + '}' + agr2
+        itemj = itemj + json + '}' + agr2 + "\n"
     itemj = "[" + itemj + "]"
     return itemj
 
@@ -42,6 +58,16 @@ def Inicio():
     return render_template("/Inicio.html")
 
 
+@app.route('/Mantenimiento/getpagestur', methods=['GET'])
+def getpagestur():
+    htmlpages = htmlfy("Select TurFch, (Turno.CliCi|| ' - ' ||CliNom|| ' - '|| CliApe) As Cliente, HosNom, "
+                       "(Turno.EmpCi || '   - '||EmpNom|| ' - "
+                       "'||EmpApe) As Empleado ,TurHde , TurHha from Turno inner join Cliente on Cliente.Clici = "
+                       "Turno.CliCi inner join Hospital on Cliente.CliHid = Hospital.HosId left join Empleado on "
+                       "Turno.EmpCi = Empleado.EmpCi", keystur)
+    return htmlpages
+
+
 @app.route('/Mantenimiento/getpagesemp', methods=['GET'])
 def getpagesemp():
     htmlpages = htmlfy("Select * from Empleado", keysemp)
@@ -50,7 +76,14 @@ def getpagesemp():
 
 @app.route('/Mantenimiento/getpagescli', methods=['GET'])
 def getpagescli():
-    htmlpages = htmlfy("Select * From Cliente", keyscli)
+    htmlpages = htmlfy("Select clici,clinom,cliape,cliage,hosnom From Cliente inner join hospital on cliente.clihid = "
+                       "hospital.hosid", keyscli)
+    return htmlpages
+
+
+@app.route('/Mantenimiento/gethospitales', methods=['GET'])
+def gethospitales():
+    htmlpages = htmlfy("Select * From Hospital", keyshos)
     return htmlpages
 
 
@@ -119,17 +152,17 @@ def AgregarModificarEmpleado():
     cedula = request.args.get('cedula')
     if request.method == "POST":
         EmpCi = request.form['EmpCi']
-        EmpNom = request.form['EmpNom']
-        EmpApe = request.form['EmpApe']
+        EmpNom = request.form['EmpNom'].strip()
+        EmpApe = request.form['EmpApe'].strip()
         EmpAge = request.form['EmpAge']
         EmpTel = request.form['EmpTel']
-        EmpDir = request.form['EmpDir']
-        EmpMail = request.form['EmpMail']
+        EmpDir = request.form['EmpDir'].strip()
+        EmpMail = request.form['EmpMail'].strip()
         EmpHde = request.form['EmpHde']
         EmpHha = request.form['EmpHha']
         if mode == "INS":
             database.execute(
-                "INSERT INTO Empleado VALUES (? , ? , ? , ? , ?, ? ,? ,? , ?)", (EmpCi, EmpNom, EmpApe, EmpAge, EmpTel
+                "INSERT INTO Empleado VALUES (? , ? , ? , ? , ? , ? ,? ,?, ?)", (EmpCi, EmpNom, EmpApe, EmpAge, EmpTel
                                                                                  , EmpDir, EmpMail, EmpHde, EmpHha))
             dbconnect.commit()
             return redirect("/Mantenimiento/Empleados")
@@ -137,7 +170,7 @@ def AgregarModificarEmpleado():
             database.execute(
                 "UPDATE Empleado SET Empci = ?,EmpNom = ?, EmpApe = ? ,EmpAge =?, EmpTel = ? , EmpDir = ? ,EmpMail = ?,"
                 "EmpHde = ? , EmpHha = ? where EmpCi = ?",
-                (cedula, EmpNom, EmpApe, EmpAge, EmpTel, EmpDir, EmpMail, EmpHde, EmpHha, cedula))
+                (EmpCi, EmpNom, EmpApe, EmpAge, EmpTel, EmpDir, EmpMail, EmpHde, EmpHha, cedula))
             dbconnect.commit()
             return redirect("/Mantenimiento/Empleados")
     return render_template("/AgregarModificarEmpleado.html")
@@ -149,8 +182,8 @@ def AgregarModificarCliente():
     cedula = request.args.get('cedula')
     if request.method == "POST":
         CliCi = request.form['CliCi']
-        CliNom = request.form['CliNom']
-        CliApe = request.form['CliApe']
+        CliNom = request.form['CliNom'].strip()
+        CliApe = request.form['CliApe'].strip()
         CliAge = request.form['CliAge']
         CliHid = request.form['CliHid']
         if mode == "INS":
@@ -164,6 +197,25 @@ def AgregarModificarCliente():
             dbconnect.commit()
             return redirect("/Mantenimiento/Clientes")
     return render_template("/AgregarModificarCliente.html")
+
+
+@app.route('/Asignar', methods=['GET', 'POST'])
+def Asignar():
+    if request.method == "POST":
+        CliCi = request.form['CliCi']
+        EmpCi = request.form['EmpCi'].strip()
+        TurFch = request.form['TurFch'].strip()
+        TurHde = request.form['TurHde']
+        TurHha = request.form['TurHha']
+        database.execute("INSERT INTO Turno Values (?,?,?,?,?)", (CliCi, EmpCi, TurFch, TurHde, TurHha))
+        dbconnect.commit()
+    return render_template("Asignar.html")
+
+
+@app.route('/MantTurnos', methods=['GET', 'POST'])
+def MantTurnos():
+    crearturnos()
+    return render_template("MantTurnos.html")
 
 
 if __name__ == "__main__":

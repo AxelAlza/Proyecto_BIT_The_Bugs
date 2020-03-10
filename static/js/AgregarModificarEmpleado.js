@@ -9,7 +9,7 @@ function GetURLParameter(sParam) {
   }
 }
 function ValidateForm() {
-  if ($('#EmpCi').val().toString().length == 8) {
+  if ($('#EmpCi').val().toString().length != 8) {
     alert("La cedula debe ser de 8 digitos")
     return true
   }
